@@ -431,8 +431,44 @@ void Blob<Dtype>::CopyFrom(const Blob& source, bool copy_diff, bool reshape) {
   }
 }
 
+// template <typename Dtype>
+// void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape) {
+//   if (reshape) {
+//     vector<int> shape;
+//     if (proto.has_num() || proto.has_channels() ||
+//         proto.has_height() || proto.has_width()) {
+//       // Using deprecated 4D Blob dimensions --
+//       // shape is (num, channels, height, width).
+//       shape.resize(4);
+//       shape[0] = proto.num();
+//       shape[1] = proto.channels();
+//       shape[2] = proto.height();
+//       shape[3] = proto.width();
+//     } else {
+//       shape.resize(proto.shape().dim_size());
+//       for (int i = 0; i < proto.shape().dim_size(); ++i) {
+//         shape[i] = proto.shape().dim(i);
+//       }
+//     }
+//     Reshape(shape);
+//   } else {
+//     CHECK(ShapeEquals(proto)) << "shape mismatch (reshape not set)";
+//   }
+//   // copy data
+//   Dtype* data_vec = mutable_cpu_data();
+//   for (int i = 0; i < count_; ++i) {
+//     data_vec[i] = proto.data(i);
+//   }
+//   if (proto.diff_size() > 0) {
+//     Dtype* diff_vec = mutable_cpu_diff();
+//     for (int i = 0; i < count_; ++i) {
+//       diff_vec[i] = proto.diff(i);
+//     }
+//   }
+// }
 template <typename Dtype>
 void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape) {
+  LOG(INFO) << "Reshape is " << reshape;
   if (reshape) {
     vector<int> shape;
     if (proto.has_num() || proto.has_channels() ||
@@ -452,6 +488,35 @@ void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape) {
     }
     Reshape(shape);
   } else {
+    if (!ShapeEquals(proto)) {
+      LOG(INFO) << "Layer needs to be reshaped!";
+      vector<int> shape;
+      if (proto.has_num() || proto.has_channels() ||
+          proto.has_height() || proto.has_width()) {
+        // Using deprecated 4D Blob dimensions --
+        // shape is (num, channels, height, width).
+        shape.resize(4);
+        shape[0] = proto.num();
+        shape[1] = proto.channels();
+        shape[2] = proto.height();
+        shape[3] = proto.width();
+      } else {
+        shape.resize(proto.shape().dim_size());
+        for (int i = 0; i < proto.shape().dim_size(); ++i) {
+          shape[i] = proto.shape().dim(i);
+        }
+      }
+      Reshape(shape);
+      LOG(INFO) << "New Blob num " << proto.num();
+      LOG(INFO) << "New Blob channels " << proto.channels();
+      LOG(INFO) << "New Blob height " << proto.height();
+      LOG(INFO) << "New Blob width " << proto.width();
+
+      LOG(INFO) << "Expected num " << LegacyShape(-4);
+      LOG(INFO) << "Expected channels " << LegacyShape(-3);
+      LOG(INFO) << "Expected height " << LegacyShape(-2);
+      LOG(INFO) << "Expected width " << LegacyShape(-1);
+    }
     CHECK(ShapeEquals(proto)) << "shape mismatch (reshape not set)";
   }
   // copy data
