@@ -1,0 +1,31 @@
+net: "examples/siamese-junk/junk_siamese_train_test.prototxt"
+
+
+# 53 * batchSize==100 > 5250
+test_iter: 53
+
+
+test_interval: 1000
+
+
+base_lr: 0.0001
+momentum: 0.9
+weight_decay: 0.0005
+
+
+lr_policy: "step"
+gamma: 0.1
+stepsize: 100000
+#gamma: 0.0001
+#power: 0.75
+
+
+display: 10
+max_iter: 50000
+
+
+snapshot: 5000
+snapshot_prefix: "examples/siamese-junk/junk_siamese"
+
+
+solver_mode: GPU

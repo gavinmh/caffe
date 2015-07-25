@@ -1,0 +1,2 @@
+/home/gavin/caffe/examples/hdf5_classification/data/train.h5
+/home/gavin/caffe/examples/hdf5_classification/data/train.h5
