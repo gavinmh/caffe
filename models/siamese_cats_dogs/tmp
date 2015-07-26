@@ -1,0 +1,68 @@
+name: "siamese_cats_dogs"
+
+layer {
+  name: "pair_data"
+  type: "ImageData"
+  top: "data"
+  top: "data_p"
+  top: "sim"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  image_data_param {
+    source: "/media/gavin/e2bcddc2-a2ea-4321-839e-29b2db8373dc/cats-dogs/train.txt"
+    batch_size: 32
+  }
+}
+layer {
+  name: "pair_data"
+  type: "ImageData"
+  top: "data"
+  top: "data_p"
+  top: "sim"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  image_data_param {
+    source: "/media/gavin/e2bcddc2-a2ea-4321-839e-29b2db8373dc/cats-dogs/test.txt"
+    batch_size: 32
+  }
+}
+
+
+layer {
+  name: "conv1_test"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    name: "conv1_w"
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    name: "conv1_b"
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+

@@ -1,0 +1,26 @@
+net: "/home/gavin/caffe/models/sn_siamese_inventory/train_val.prototxt"
+
+# In this case, we have test batch size 50 and 200 test iterations, covering the full 10,000 testing images.
+test_iter: 200
+
+
+test_interval: 2000
+
+
+base_lr: 0.001
+momentum: 0.9
+weight_decay: 0.0000
+
+
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+
+display: 50
+
+max_iter: 150000
+
+snapshot: 5000
+snapshot_prefix: "/media/gavin/e2bcddc2-a2ea-4321-839e-29b2db8373dc/siamese_inventory_snapshots/sn_siamese_big"
+
+solver_mode: GPU

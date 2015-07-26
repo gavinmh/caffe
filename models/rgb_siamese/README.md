@@ -1,0 +1,1 @@
+This project is a copy of sn_siamese. No work has been completed to adapt anything to RGB images.
